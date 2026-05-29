@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model SearchSession {
+  id           String       @id @default(cuid())
+  createdAt    DateTime     @default(now())
+  userSearches UserSearch[]
+}
+
+model UserSearch {
+  id                  String                 @id @default(cuid())
+  sessionId           String
+  rawQuery            String
+  createdAt           DateTime               @default(now())
+  searchSession       SearchSession          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  extractedPreference ExtractedPreference?
+  recommendations     RecommendationResult[]
+
+  @@index([sessionId])
+}
+
+model ExtractedPreference {
+  id                  String     @id @default(cuid())
+  userSearchId        String     @unique
+  budgetMin           Int?
+  budgetMax           Int?
+  bodyType            String?
+  fuelType            String?
+  transmission        String?
+  seatsMin            Int?
+  cityUsagePercent    Int?
+  highwayUsagePercent Int?
+  prioritySafety      Int        @default(5)
+  priorityMileage     Int        @default(5)
+  priorityComfort     Int        @default(5)
+  priorityPerformance Int        @default(5)
+  priorityValue       Int        @default(5)
+  mustHaveFeatures    String?
+  niceToHaveFeatures  String?
+  confidence          Float?
+  createdAt           DateTime   @default(now())
+  userSearch          UserSearch @relation(fields: [userSearchId], references: [id], onDelete: Cascade)
+}
+
+model Car {
+  id                String                 @id @default(cuid())
+  make              String
+  model             String
+  variant           String
+  bodyType          String
+  exShowroomPrice   Int
+  safetyRating      Float
+  mileageKmpl       Float
+  familySuitability Float
+  valueForMoney     Float
+  maintenanceCost   Int
+  resaleScore       Float
+  availabilityScore Float
+  featureVector     String?
+  specs             CarSpec?
+  recommendations   RecommendationResult[]
+}
+
+model CarSpec {
+  id           String  @id @default(cuid())
+  carId        String  @unique
+  engineCc     Int?
+  powerBhp     Float?
+  torqueNm     Float?
+  transmission String?
+  fuelType     String?
+  seating      Int?
+  bootSpaceL   Int?
+  airbags      Int?
+  adasLevel    Int?
+  ncapRating   Float?
+  car          Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
+
+model RecommendationResult {
+  id             String     @id @default(cuid())
+  userSearchId   String
+  carId          String
+  rank           Int
+  totalScore     Float
+  scoreBreakdown String
+  tradeoffNotes  String?
+  explanation    String?
+  bestForTag     String?
+  createdAt      DateTime   @default(now())
+  userSearch     UserSearch @relation(fields: [userSearchId], references: [id], onDelete: Cascade)
+  car            Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@unique([userSearchId, carId])
+  @@index([userSearchId])
+}
