@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../src/infrastructure/db/prisma";
 
 const MAKES = [
   { make: "Maruti", models: ["Swift", "Brezza", "Ertiga", "Fronx"] },

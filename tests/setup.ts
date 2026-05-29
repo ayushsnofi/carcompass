@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 
 beforeAll(
   () => {
-    execSync("npx prisma db push --skip-generate", {
+    execSync("npm run db:deploy", {
       stdio: "pipe",
       env: { ...process.env },
     });

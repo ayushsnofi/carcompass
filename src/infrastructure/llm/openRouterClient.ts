@@ -90,7 +90,7 @@ function parseOpenRouterError(
   return error;
 }
 
-function useJsonResponseFormat(): boolean {
+function isJsonResponseFormatEnabled(): boolean {
   return process.env.OPENROUTER_JSON_MODE !== "false";
 }
 
@@ -120,7 +120,7 @@ export class OpenRouterClient {
         { role: "user", content: userContent },
       ],
     };
-    if (useJsonResponseFormat()) {
+    if (isJsonResponseFormatEnabled()) {
       payload.response_format = { type: "json_object" };
     }
 

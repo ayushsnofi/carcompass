@@ -17,7 +17,7 @@ I would have made the UX more interactive with side by side comparison with imag
 ## Stack
 
 - Next.js 15 (App Router), TypeScript, Tailwind CSS
-- SQLite + Prisma ORM
+- Vercel Postgres + Prisma ORM
 - OpenRouter API (OpenAI-compatible chat completions)
 - Vitest (unit/integration), Playwright (e2e)
 
@@ -35,7 +35,7 @@ npm install
 cp .env.example .env
 # Add OPENROUTER_API_KEY from https://openrouter.ai/keys
 
-npm run db:migrate
+npm run db:deploy
 npm run db:seed
 npm run dev
 ```
@@ -46,7 +46,8 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Variable | Description |
 |----------|-------------|
-| `DATABASE_URL` | SQLite path, e.g. `file:./dev.db` |
+| `DATABASE_URL` | Postgres pooled URL (Vercel Postgres `POSTGRES_PRISMA_URL`) |
+| `DIRECT_URL` | Postgres direct URL for migrations (`POSTGRES_URL_NON_POOLING`) |
 | `OPENROUTER_API_KEY` | API key from [openrouter.ai/keys](https://openrouter.ai/keys) |
 | `OPENROUTER_MODEL` | Model slug, e.g. `google/gemini-2.5-pro` — see [models](https://openrouter.ai/models) |
 | `OPENROUTER_SITE_URL` | Optional referer for OpenRouter rankings (default `http://localhost:3000`) |
